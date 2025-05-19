@@ -1,5 +1,7 @@
 # Directory: linkedin-lead-agent
 # File: main.py
+from dotenv import load_dotenv
+load_dotenv()
 import os
 import time
 import requests
@@ -105,35 +107,3 @@ if __name__ == "__main__":
     main()
 
 
-# File: .github/workflows/run_agent.yml
-name: Run LinkedIn Lead Agent Daily
-
-on:
-  schedule:
-    - cron: '0 9 * * *'  # every day at 09:00 UTC
-
-jobs:
-  run-agent:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - name: Install Dependencies
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install -r requirements.txt
-      - name: Run Lead Agent
-        env:
-          PHANTOMBUSTER_API_KEY: ${{ secrets.PHANTOMBUSTER_API_KEY }}
-          PHANTOMBUSTER_AGENT_ID: ${{ secrets.PHANTOMBUSTER_AGENT_ID }}
-          EXPANDI_API_KEY:      ${{ secrets.EXPANDI_API_KEY }}
-          EMAIL_USERNAME:       ${{ secrets.EMAIL_USERNAME }}
-          EMAIL_PASSWORD:       ${{ secrets.EMAIL_PASSWORD }}
-          CALENDLY_LINK:        ${{ secrets.CALENDLY_LINK }}
-        run: |
-          source venv/bin/activate
-          python main.py
